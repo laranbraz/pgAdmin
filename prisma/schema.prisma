@@ -1,0 +1,105 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Unidade {
+  id          Int          @id @default(autoincrement())
+  unidade     String       @db.VarChar(100)
+  requisicoes Requisicao[]
+}
+
+model Cargo {
+  id          Int          @id @default(autoincrement())
+  cargo       String?      @db.VarChar(40)
+  requisicoes Requisicao[]
+}
+
+model Sistema {
+  id               Int               @id @default(autoincrement())
+  sistema          String            @db.VarChar(50)
+  sistemasServicos SistemasServico[]
+}
+
+model Servico {
+  id               Int               @id @default(autoincrement())
+  servico          String            @db.VarChar(50)
+  sistemasServicos SistemasServico[]
+}
+
+model TipoArquivo {
+  id                       Int                       @id @default(autoincrement())
+  arquivo                  String                    @db.Text
+  sistemasServicosArquivos SistemasServicosArquivo[]
+}
+
+model SistemasServico {
+  id        Int  @id @default(autoincrement())
+  sistemaId Int? @map("sistemaID")
+  servicoId Int? @map("servicoID")
+
+  sistema     Sistema?                  @relation(fields: [sistemaId], references: [id])
+  servico     Servico?                  @relation(fields: [servicoId], references: [id])
+  arquivos    SistemasServicosArquivo[]
+  requisicoes Requisicao[]
+}
+
+model SistemasServicosArquivo {
+  id                 Int  @id @default(autoincrement())
+  sistemasServicosId Int? @map("sistemas_servicosID")
+  arquivoId          Int? @map("arquivoID")
+
+  sistemasServico SistemasServico? @relation(fields: [sistemasServicosId], references: [id])
+  tipoArquivo     TipoArquivo?     @relation(fields: [arquivoId], references: [id])
+}
+
+model Anexo {
+  id          Int          @id @default(autoincrement())
+  anexo       String       @db.Text
+  filename    String       @db.VarChar(500)
+  mimetype    String?      @db.VarChar(500)
+  size        Int?
+  requisicoes Requisicao[]
+}
+
+model Requisicao {
+  id               Int      @id @default(autoincrement())
+  cpf              String   @db.VarChar(14) // CPF do requerente
+  nomeCompleto     String   @db.VarChar(200)
+  dataNascimento   DateTime
+  matricula        String   @db.VarChar(8)
+  emailPessoal     String?  @db.VarChar(150)
+  emailFuncional   String   @db.VarChar(150)
+  contato          String?  @db.VarChar(17)
+  observacao       String?  @db.VarChar(100)
+  unidadeId        Int?
+  cargoId          Int?
+  sistemaServicoId Int      @map("sistema_servicoID")
+  anexoId          Int?     @map("anexoID")
+  chamadoId        Int?     @map("chamadoID")
+  dataSolicitacao  DateTime @default(now()) @map("data_solicitacao")
+
+  unidade        Unidade?        @relation(fields: [unidadeId], references: [id])
+  cargo          Cargo?          @relation(fields: [cargoId], references: [id])
+  sistemaServico SistemasServico @relation(fields: [sistemaServicoId], references: [id])
+  anexo          Anexo?          @relation(fields: [anexoId], references: [id])
+
+  @@map("requisicoes")
+}
+
+model Usuario {
+  id               Int      @id @default(autoincrement())
+  username         String   @unique @db.VarChar(30)
+  passwordHash     String   @db.VarChar(30)
+  
+}
