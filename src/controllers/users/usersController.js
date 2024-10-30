@@ -1,24 +1,32 @@
+const express = require('express');
+const bcrypt = require('bcryptjs');
 const prisma = require('../../config/prismaConnection');
+
 
 // Criação de Cargos
 const addUser = async (req, res) => {
-  const { username, passwordHash } = req.body;
+  const { username, password } = req.body;
 
   try {
-    const novoUsuario = await prisma.usuario.create({
-      data: { username, passwordHash },
+    const passwordHash = await bcrypt.hash(password, 12);
+
+    const newUser =  await prisma.usuario.create({
+      data: {
+        username,
+        passwordHash
+      },
     });
-    res.status(201).json({ message: 'Usuário adicionado com sucesso', usuario: novoUsuario });
-  } catch (err) {
-    console.error('Erro ao adicionar usuário', err);
-    res.status(500).json({ error: 'Erro ao adicionar usuário', details: err.message });
-  }
-};
+
+    res.status(201).json({ message: 'Usuário criado com sucesso', user: newUser });
+   } catch (error) {
+      res.status(500).json({ error: 'Erro ao criar usuário', details: error.message });
+    }
+  };
 
   // Obter todos os usuários
   const getAllUsers = async (req, res) => {
     try {
-      const pessoas = await prisma.usuario.findMany();
+      const usuarios = await prisma.usuario.findMany();
       res.status(200).json(usuarios);
     } catch (err) {
       console.error('Erro ao buscar requisitantes', err);
@@ -31,7 +39,7 @@ const addUser = async (req, res) => {
     const { id } = req.params;
   
     try {
-      const pessoa = await prisma.usuario.delete({
+      const usuarios = await prisma.usuario.delete({
         where: {
           id: parseInt(id),
         },

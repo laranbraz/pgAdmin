@@ -11,6 +11,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 // Importação das Rotas
 const loginRoutes = require('./routes/loginRoutes'); //Login Usuário
+const adminRegisterRoutes = require('./routes/adminRegisterRoutes'); //Registro de Administrador
 const usersRoutes = require('./routes/usersRoutes'); //Usuários
 const fileRoutes = require('./routes/fileRoutes'); //Arquivos
 const positionRoutes = require('./routes/positionRoutes'); //Cargos
@@ -32,6 +33,7 @@ app.get('/', (req, res) => {
 
 // Configuração das Rotas 
 app.use('/admin/login', loginRoutes);
+app.use('/admin', adminRegisterRoutes);
 app.use('/admin/usuarios', authMiddleware, usersRoutes);
 app.use('/admin/arquivos', authMiddleware, fileRoutes);
 app.use('/admin/cargos', authMiddleware, positionRoutes);
