@@ -22,6 +22,7 @@ model Unidade {
 model Cargo {
   id          Int          @id @default(autoincrement())
   cargo       String?      @db.VarChar(40)
+  sistemasServicos SistemasServico[]
   requisicoes Requisicao[]
 }
 
@@ -47,9 +48,11 @@ model SistemasServico {
   id        Int  @id @default(autoincrement())
   sistemaId Int? @map("sistemaID")
   servicoId Int? @map("servicoID")
+  cargoId   Int? @map("cargoID")
 
   sistema     Sistema?                  @relation(fields: [sistemaId], references: [id])
   servico     Servico?                  @relation(fields: [servicoId], references: [id])
+  cargo       Cargo?                    @relation(fields: [cargoId], references: [id])
   arquivos    SistemasServicosArquivo[]
   requisicoes Requisicao[]
 }
@@ -74,7 +77,7 @@ model Anexo {
 
 model Requisicao {
   id               Int      @id @default(autoincrement())
-  cpf              String   @db.VarChar(14) // CPF do requerente
+  cpf              String   @db.VarChar(14)
   nomeCompleto     String   @db.VarChar(200)
   dataNascimento   DateTime
   matricula        String   @db.VarChar(8)
@@ -101,5 +104,8 @@ model Usuario {
   id               Int      @id @default(autoincrement())
   username         String   @unique @db.VarChar(30)
   passwordHash     String   @db.VarChar(60)
-  
+  cpf            String   @unique @db.VarChar(14) 
+  nome           String   @db.VarChar(100)
+  status         Boolean  @default(true) 
+  nivelPermissao String   @default("moderador")
 }

@@ -20,6 +20,7 @@ const systemRoutes = require('./routes/systemRoutes'); //Sistemas
 const unitRoutes = require('./routes/unitRoutes'); //Unidades
 const uploadedFilesRoutes = require('./routes/uploadedFilesRoutes'); //Uploads
 const requireRoutes = require('./routes/requireRoutes'); //Requisições
+const systemsManagementRoutes = require('./routes/systemsManagementRoutes'); //Gerenciamento de Sistema/Serviço/Cargo/Arquivo
 
 
 app.use(express.json());
@@ -42,6 +43,7 @@ app.use('/admin/sistemas', authMiddleware, systemRoutes);
 app.use('/admin/unidades', authMiddleware, unitRoutes);
 app.use('/admin/uploads', authMiddleware, uploadedFilesRoutes);
 app.use('/admin/requisicoes', authMiddleware, requireRoutes);
+app.use('/admin/gerenciamento', authMiddleware, systemsManagementRoutes);
 
 app.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`);

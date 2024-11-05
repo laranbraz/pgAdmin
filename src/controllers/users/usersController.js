@@ -2,27 +2,6 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const prisma = require('../../config/prismaConnection');
 
-
-// Criação de Cargos
-const addUser = async (req, res) => {
-  const { username, password } = req.body;
-
-  try {
-    const passwordHash = await bcrypt.hash(password, 12);
-
-    const newUser =  await prisma.usuario.create({
-      data: {
-        username,
-        passwordHash
-      },
-    });
-
-    res.status(201).json({ message: 'Usuário criado com sucesso', user: newUser });
-   } catch (error) {
-      res.status(500).json({ error: 'Erro ao criar usuário', details: error.message });
-    }
-  };
-
   // Obter todos os usuários
   const getAllUsers = async (req, res) => {
     try {
@@ -59,5 +38,4 @@ const addUser = async (req, res) => {
 module.exports = {
     getAllUsers,
     deleteUser,
-    addUser
 };
