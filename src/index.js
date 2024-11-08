@@ -26,14 +26,17 @@ const systemsManagementRoutes = require('./routes/systemsManagementRoutes'); //G
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const swaggerUi = require('swagger-ui-express');
+const swaggerFile = require('../swagger-output.json');
+
 //Rota raiz para teste de API
-app.get('/', (req, res) => {
+app.get('/teste/servidor', (req, res) => {
     console.log('Request received at /');
     res.send('Servidor rodando com sucesso.');
   });
 
 // Configuração das Rotas 
-app.use('/admin/login', loginRoutes);
+app.use('/admin', loginRoutes);
 app.use('/admin', adminRegisterRoutes);
 app.use('/admin/usuarios', authMiddleware, usersRoutes);
 app.use('/admin/arquivos', authMiddleware, fileRoutes);
@@ -44,6 +47,10 @@ app.use('/admin/unidades', authMiddleware, unitRoutes);
 app.use('/admin/uploads', authMiddleware, uploadedFilesRoutes);
 app.use('/admin/requisicoes', authMiddleware, requireRoutes);
 app.use('/admin/gerenciamento', authMiddleware, systemsManagementRoutes);
+
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+
 
 app.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`);
