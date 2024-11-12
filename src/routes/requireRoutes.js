@@ -5,6 +5,6 @@ const checkPermission = require('../middleware/checkPermissionMiddleware');
 const router = express.Router();
 
 router.get('/verificacao', checkPermission('moderador'), getAllRequires);
-router.delete('/:id', checkPermission('administrador'), deleteRequire);
+router.delete('/:id', checkPermission('moderador'), deleteRequire);
 
 module.exports = router;
