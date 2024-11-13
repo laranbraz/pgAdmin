@@ -21,6 +21,7 @@ const unitRoutes = require('./routes/unitRoutes'); //Unidades
 const uploadedFilesRoutes = require('./routes/uploadedFilesRoutes'); //Uploads
 const requireRoutes = require('./routes/requireRoutes'); //Requisições
 const systemsManagementRoutes = require('./routes/systemsManagementRoutes'); //Gerenciamento de Sistema/Serviço/Cargo/Arquivo
+const systemServicePositionRoutes = require('./routes/systemServicePositionRoutes'); //Sistemas, serviços e arquivos
 
 
 app.use(express.json());
@@ -47,6 +48,7 @@ app.use('/admin/unidades', authMiddleware, unitRoutes);
 app.use('/admin/uploads', authMiddleware, uploadedFilesRoutes);
 app.use('/admin/requisicoes', authMiddleware, requireRoutes);
 app.use('/admin/gerenciamento', authMiddleware, systemsManagementRoutes);
+app.use('/admin/sistemas-servicos-cargos', authMiddleware, systemServicePositionRoutes);
 
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
